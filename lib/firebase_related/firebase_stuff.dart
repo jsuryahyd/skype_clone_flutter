@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:skype_clone/firebase_related/firebase_auth_methods.dart';
 import 'package:skype_clone/models/User.dart';
@@ -21,12 +22,27 @@ class FirebaseRepo {
     _methods.addUserToDb(fUser);
   }
 
-  Future<void> signOut()async{
+  Future<void> signOut() async {
     return _methods.signOut();
   }
 
-  Future<List<User>> fetchAllUsers(String selfId)async{
-      return _methods.fetchAllUsers(selfId);
+  Future<List<User>> fetchAllUsers(String selfId) async {
+    return _methods.fetchAllUsers(selfId);
+  }
+
+  Future addMessageToDb(message) {
+    return _methods.addMessageToDb(message);
+  }
+
+  fetchThreadMessages(threadId) {
+    return _methods.fetchMessagesOfThread(threadId);
+  }
+
+  fetchUserThreads(userId) {
+    return _methods.fetchUserThreads(userId);
+  }
+
+  createThread(thread){
+    return _methods.createThread(thread);
   }
 }
-

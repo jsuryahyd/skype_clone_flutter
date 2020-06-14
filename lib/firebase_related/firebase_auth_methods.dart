@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:skype_clone/models/User.dart';
+import 'package:skype_clone/models/message.dart';
+import 'package:skype_clone/models/thread.dart';
 
 class FirebaseMethods {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -58,9 +60,36 @@ class FirebaseMethods {
     List<User> userList = result.documents
         .where((i) => i.documentID != selfId)
         .toList()
-        .map((i) => User.fromMap(i))
+        .map((i) => User.fromMap(i.data))
         .toList();
 
     return userList;
+  }
+
+Future<List<Thread>> fetchUserThreads(String selfId) async {
+    QuerySnapshot result = await _firestore.collection("threads").where("userUids",arrayContains: selfId).getDocuments();
+
+    List<Thread> threads = result.documents
+        .map((DocumentSnapshot doc) {
+          var data = doc.data;
+          data['uid'] = doc.documentID; 
+         return Thread.fromMap(data);
+          })
+        .toList();
+
+    return threads;
+  }
+
+  Future addMessageToDb(Message message) async {
+    DocumentReference result = await _firestore.collection("messages").add(message.toMap());
+    print(result.documentID);
+  }
+
+  fetchMessagesOfThread(threadId){
+    return _firestore.collection("messages").where("receiverThreadId",isEqualTo: threadId).orderBy("timestamp",descending:true).snapshots();
+  }
+
+  createThread(Thread thread){
+    return _firestore.collection("threads").add(thread.toMap());
   }
 }

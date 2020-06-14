@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:skype_clone/firebase_related/firebase_stuff.dart';
@@ -7,6 +9,12 @@ import 'package:skype_clone/screens/login_screen.dart';
 import 'screens/search_screen.dart';
 
 void main() {
+  //https://flutter.dev/docs/testing/errors
+   FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+    if (kReleaseMode)
+      exit(1);
+  };
   runApp(MyApp());
 }
 
